@@ -68,6 +68,20 @@ describe CustomMarkdownRenderer do
       end
     end
 
+    context 'when link is a Loom URL' do
+      let(:loom_url) { 'https://www.loom.com/share/VIDEO_ID' }
+
+      it 'renders an iframe with Loom embed code' do
+        output = render_markdown_link(loom_url)
+        expect(output).to include(`
+          <iframe
+            width="640"
+            height="360"
+            src="https://www.loom.com/embed/VIDEO_ID"
+        `)
+      end
+    end
+
     context 'when link is a Vimeo URL' do
       let(:vimeo_url) { 'https://vimeo.com/1234567' }
 
@@ -104,13 +118,51 @@ describe CustomMarkdownRenderer do
     end
 
     context 'when multiple links are present' do
-      it 'renders all links' do
-        markdown = '[youtube](https://www.youtube.com/watch?v=VIDEO_ID) [vimeo](https://vimeo.com/1234567) ^ hello ^ [normal](https://example.com)'
+      it 'renders all links when present between empty lines' do
+        markdown = "\n[youtube](https://www.youtube.com/watch?v=VIDEO_ID)\n\n[vimeo](https://vimeo.com/1234567)\n^ hello ^ [normal](https://example.com)"
         output = render_markdown(markdown)
         expect(output).to include('src="https://www.youtube.com/embed/VIDEO_ID"')
         expect(output).to include('src="https://player.vimeo.com/video/1234567"')
         expect(output).to include('<a href="https://example.com">')
         expect(output).to include('<sup> hello </sup>')
+      end
+    end
+
+    context 'when links within text are present' do
+      it 'renders only text within blank lines as embeds' do
+        markdown = "\n[youtube](https://www.youtube.com/watch?v=VIDEO_ID)\nthis is such an amazing [vimeo](https://vimeo.com/1234567)\n[vimeo](https://vimeo.com/1234567)"
+        output = render_markdown(markdown)
+        expect(output).to include('src="https://www.youtube.com/embed/VIDEO_ID"')
+        expect(output).to include('href="https://vimeo.com/1234567"')
+        expect(output).to include('src="https://player.vimeo.com/video/1234567"')
+      end
+    end
+
+    context 'when link is an Arcade URL' do
+      let(:arcade_url) { 'https://app.arcade.software/share/ARCADE_ID' }
+
+      it 'renders an iframe with Arcade embed code' do
+        output = render_markdown_link(arcade_url)
+        expect(output).to include('src="https://app.arcade.software/embed/ARCADE_ID"')
+        expect(output).to include('<iframe')
+        expect(output).to include('webkitallowfullscreen')
+        expect(output).to include('mozallowfullscreen')
+        expect(output).to include('allowfullscreen')
+      end
+
+      it 'wraps iframe in responsive container' do
+        output = render_markdown_link(arcade_url)
+        expect(output).to include('position: relative; padding-bottom: 62.5%; height: 0;')
+        expect(output).to include('position: absolute; top: 0; left: 0; width: 100%; height: 100%;')
+      end
+    end
+
+    context 'when multiple links including Arcade are present' do
+      it 'renders Arcade embed along with other content types' do
+        markdown = "\n[arcade](https://app.arcade.software/share/ARCADE_ID)\n\n[youtube](https://www.youtube.com/watch?v=VIDEO_ID)\n"
+        output = render_markdown(markdown)
+        expect(output).to include('src="https://app.arcade.software/embed/ARCADE_ID"')
+        expect(output).to include('src="https://www.youtube.com/embed/VIDEO_ID"')
       end
     end
   end

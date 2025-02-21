@@ -51,6 +51,7 @@ class Inbox < ApplicationRecord
   validates :account_id, presence: true
   validates :timezone, inclusion: { in: TZInfo::Timezone.all_identifiers }
   validates :out_of_office_message, length: { maximum: Limits::OUT_OF_OFFICE_MESSAGE_MAX_LENGTH }
+  validates :greeting_message, length: { maximum: Limits::GREETING_MESSAGE_MAX_LENGTH }
   validate :ensure_valid_max_assignment_limit
 
   belongs_to :account
@@ -65,7 +66,7 @@ class Inbox < ApplicationRecord
   has_many :inbox_members, dependent: :destroy_async
   has_many :members, through: :inbox_members, source: :user
   has_many :conversations, dependent: :destroy_async
-  has_many :messages, through: :conversations
+  has_many :messages, dependent: :destroy_async
 
   has_one :agent_bot_inbox, dependent: :destroy_async
   has_one :agent_bot, through: :agent_bot_inbox
@@ -76,16 +77,25 @@ class Inbox < ApplicationRecord
 
   after_destroy :delete_round_robin_agents
 
+  after_create_commit :dispatch_create_event
+  after_update_commit :dispatch_update_event
+
   scope :order_by_name, -> { order('lower(name) ASC') }
 
-  def add_member(user_id)
-    member = inbox_members.new(user_id: user_id)
-    member.save!
+  # Adds multiple members to the inbox
+  # @param user_ids [Array<Integer>] Array of user IDs to add as members
+  # @return [void]
+  def add_members(user_ids)
+    inbox_members.create!(user_ids.map { |user_id| { user_id: user_id } })
+    update_account_cache
   end
 
-  def remove_member(user_id)
-    member = inbox_members.find_by!(user_id: user_id)
-    member.try(:destroy)
+  # Removes multiple members from the inbox
+  # @param user_ids [Array<Integer>] Array of user IDs to remove
+  # @return [void]
+  def remove_members(user_ids)
+    inbox_members.where(user_id: user_ids).destroy_all
+    update_account_cache
   end
 
   def facebook?
@@ -125,7 +135,8 @@ class Inbox < ApplicationRecord
   end
 
   def active_bot?
-    agent_bot_inbox&.active? || hooks.pluck(:app_id).include?('dialogflow')
+    agent_bot_inbox&.active? || hooks.where(app_id: %w[dialogflow],
+                                            status: 'enabled').count.positive?
   end
 
   def inbox_type
@@ -157,6 +168,18 @@ class Inbox < ApplicationRecord
   end
 
   private
+
+  def dispatch_create_event
+    return if ENV['ENABLE_INBOX_EVENTS'].blank?
+
+    Rails.configuration.dispatcher.dispatch(INBOX_CREATED, Time.zone.now, inbox: self)
+  end
+
+  def dispatch_update_event
+    return if ENV['ENABLE_INBOX_EVENTS'].blank?
+
+    Rails.configuration.dispatcher.dispatch(INBOX_UPDATED, Time.zone.now, inbox: self, changed_attributes: previous_changes)
+  end
 
   def ensure_valid_max_assignment_limit
     # overridden in enterprise/app/models/enterprise/inbox.rb
