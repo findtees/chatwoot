@@ -1,103 +1,19 @@
-<template>
-  <div
-    role="dialog"
-    class="emoji-dialog bg-white shadow-lg dark:bg-slate-900 rounded-md border border-solid border-slate-75 dark:border-slate-800/50 box-content h-[300px] absolute right-0 -top-[95px] w-80 z-20"
-  >
-    <div class="flex flex-col">
-      <div class="emoji-search--wrap">
-        <input
-          ref="searchbar"
-          v-model="search"
-          type="text"
-          class="emoji-search--input focus:box-shadow-blue dark:focus:box-shadow-blue-dark"
-          :placeholder="$t('EMOJI.PLACEHOLDER')"
-        />
-      </div>
-      <div v-if="hasNoSearch" ref="emojiItem" class="emoji-item">
-        <h5 class="emoji-category--title">
-          {{ selectedKey }}
-        </h5>
-        <div class="emoji--row">
-          <button
-            v-for="item in filterEmojisByCategory"
-            :key="item.slug"
-            v-dompurify-html="item.emoji"
-            class="emoji--item"
-            track-by="$index"
-            @click="onClick(item.emoji)"
-          />
-        </div>
-      </div>
-      <div v-else ref="emojiItem" class="emoji-item">
-        <div v-for="category in filterAllEmojisBySearch" :key="category.slug">
-          <h5 v-if="category.emojis.length > 0" class="emoji-category--title">
-            {{ category.name }}
-          </h5>
-          <div v-if="category.emojis.length > 0" class="emoji--row">
-            <button
-              v-for="item in category.emojis"
-              :key="item.slug"
-              v-dompurify-html="item.emoji"
-              class="emoji--item"
-              track-by="$index"
-              @click="onClick(item.emoji)"
-            />
-          </div>
-        </div>
-        <div v-if="hasEmptySearchResult" class="empty-message">
-          <div class="emoji-icon">
-            <fluent-icon icon="emoji" size="48" />
-          </div>
-          <span class="empty-message--text">
-            {{ $t('EMOJI.NOT_FOUND') }}
-          </span>
-        </div>
-      </div>
-
-      <div class="emoji-dialog--footer" role="menu">
-        <ul>
-          <li>
-            <button
-              class="emoji--item"
-              :class="{ active: selectedKey === 'Search' }"
-              @click="changeCategory('Search')"
-            >
-              <fluent-icon
-                icon="search"
-                size="16"
-                class="text-slate-700 dark:text-slate-100"
-              />
-            </button>
-          </li>
-          <li
-            v-for="category in categories"
-            :key="category.slug"
-            @click="changeCategory(category.name)"
-          >
-            <button
-              v-dompurify-html="getFirstEmojiByCategoryName(category.name)"
-              class="emoji--item"
-              :class="{ active: selectedKey === category.name }"
-              @click="changeCategory(category.name)"
-            />
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script>
 import emojis from './emojisGroup.json';
 import FluentIcon from 'shared/components/FluentIcon/Index.vue';
+import WootButton from 'dashboard/components/ui/WootButton.vue';
 const SEARCH_KEY = 'Search';
 
 export default {
-  components: { FluentIcon },
+  components: { FluentIcon, WootButton },
   props: {
     onClick: {
       type: Function,
       default: () => {},
+    },
+    showRemoveButton: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
@@ -160,25 +76,133 @@ export default {
       return categoryItem ? categoryItem.emojis[0].emoji : '';
     },
     focusSearchInput() {
-      this.$refs.searchbar.focus();
+      this.$nextTick(() => {
+        this.$refs.searchbar.focus();
+      });
     },
   },
 };
 </script>
+
+<template>
+  <div
+    role="dialog"
+    class="emoji-dialog bg-white shadow-lg dark:bg-slate-900 rounded-md border border-solid border-slate-75 dark:border-slate-800/50 box-content h-[18.75rem] absolute right-0 -top-[95px] w-80 z-20"
+  >
+    <div class="flex flex-col">
+      <div class="flex gap-2 emoji-search--wrap">
+        <input
+          ref="searchbar"
+          v-model="search"
+          type="text"
+          class="emoji-search--input focus:box-shadow-blue dark:focus:box-shadow-dark !mb-0 !h-8 !text-sm"
+          :placeholder="$t('EMOJI.PLACEHOLDER')"
+        />
+        <WootButton
+          v-if="showRemoveButton"
+          size="small"
+          variant="smooth"
+          class="dark:!bg-slate-800 dark:!hover:bg-slate-700"
+          color-scheme="secondary"
+          @click="onClick('')"
+        >
+          {{ $t('EMOJI.REMOVE') }}
+        </WootButton>
+      </div>
+      <div v-if="hasNoSearch" ref="emojiItem" class="emoji-item">
+        <h5 class="emoji-category--title">
+          {{ selectedKey }}
+        </h5>
+        <div class="emoji--row">
+          <button
+            v-for="item in filterEmojisByCategory"
+            :key="item.slug"
+            v-dompurify-html="item.emoji"
+            class="emoji--item"
+            track-by="$index"
+            @click="onClick(item.emoji)"
+          />
+        </div>
+      </div>
+      <div v-else ref="emojiItem" class="emoji-item">
+        <div v-for="category in filterAllEmojisBySearch" :key="category.slug">
+          <h5 v-if="category.emojis.length > 0" class="emoji-category--title">
+            {{ category.name }}
+          </h5>
+          <div v-if="category.emojis.length > 0" class="emoji--row">
+            <button
+              v-for="item in category.emojis"
+              :key="item.slug"
+              v-dompurify-html="item.emoji"
+              class="emoji--item"
+              track-by="$index"
+              @click="onClick(item.emoji)"
+            />
+          </div>
+        </div>
+        <div v-if="hasEmptySearchResult" class="empty-message">
+          <div class="emoji-icon">
+            <FluentIcon icon="emoji" size="48" />
+          </div>
+          <span class="empty-message--text">
+            {{ $t('EMOJI.NOT_FOUND') }}
+          </span>
+        </div>
+      </div>
+
+      <div class="emoji-dialog--footer" role="menu">
+        <ul>
+          <li>
+            <button
+              class="emoji--item"
+              :class="{ active: selectedKey === 'Search' }"
+              @click="changeCategory('Search')"
+            >
+              <FluentIcon
+                icon="search"
+                size="16"
+                class="text-slate-700 dark:text-slate-100"
+              />
+            </button>
+          </li>
+          <li
+            v-for="category in categories"
+            :key="category.slug"
+            @click="changeCategory(category.name)"
+          >
+            <button
+              v-dompurify-html="getFirstEmojiByCategoryName(category.name)"
+              class="emoji--item"
+              :class="{ active: selectedKey === category.name }"
+              @click="changeCategory(category.name)"
+            />
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</template>
+
 <style scoped>
 @tailwind components;
+
 @layer components {
   .box-shadow-blue {
-    box-shadow: 0 0 0 1px #1f93ff, 0 0 2px 3px #c7e3ff;
+    box-shadow:
+      0 0 0 1px #1f93ff,
+      0 0 1px 2px #c7e3ff;
   }
 
-  .box-shadow-blue-dark {
-    box-shadow: 0 0 0 1px #1f93ff, 0 0 2px 3px #4c5155;
+  .box-shadow-dark {
+    box-shadow:
+      0 0 0 1px #212222,
+      0 0 1px 2px #4c5155;
   }
 }
 </style>
+
 <style lang="scss">
-@import '~dashboard/assets/scss/mixins';
+@import 'dashboard/assets/scss/mixins';
 
 .emoji-dialog {
   &::before {
@@ -188,6 +212,7 @@ export default {
       $color-bg-dark: #26292b;
       @include arrow(bottom, $color-bg-dark, $space-slab);
     }
+
     @media (prefers-color-scheme: light) {
       $color-bg: #ebf0f5;
       @include arrow(bottom, $color-bg, $space-slab);
@@ -205,7 +230,7 @@ export default {
   @apply box-border p-1;
 
   .emoji--item {
-    @apply h-[26px] w-[26px] leading-normal m-1;
+    @apply h-[1.625rem] w-[1.625rem] leading-normal m-1;
   }
 }
 
@@ -213,23 +238,24 @@ export default {
   @apply m-2 sticky top-2;
 
   .emoji-search--input {
-    @apply text-sm focus-visible:border-transparent text-slate-800 dark:text-slate-100 h-8 m-0 p-2 w-full rounded-md bg-slate-75 dark:bg-slate-800 border border-solid border-transparent dark:border-slate-800/50;
+    @apply text-sm focus-visible:border-transparent text-slate-800 dark:text-slate-100 h-8 m-0 p-2 w-full rounded-md bg-slate-50 dark:bg-slate-800 border border-solid border-transparent dark:border-slate-800/50;
   }
 }
 
 .empty-message {
-  @apply items-center flex flex-col h-[212px] justify-center;
+  @apply items-center flex flex-col h-[13.25rem] justify-center;
 
   .emoji-icon {
     @apply text-slate-200 dark:text-slate-200 mb-2;
   }
+
   .empty-message--text {
     @apply text-slate-200 dark:text-slate-200 text-sm font-medium;
   }
 }
 
 .emoji-item {
-  @apply h-[212px] overflow-y-auto;
+  @apply h-[13.25rem] overflow-y-auto;
 }
 
 .emoji-category--title {
@@ -237,7 +263,7 @@ export default {
 }
 
 .emoji-dialog--footer {
-  @apply relative w-[322px] -left-px rtl:left-[unset] rtl:-right-px bottom-0 py-0 rounded-b-md border-b border-solid border-slate-75 dark:border-slate-800/50 px-1 bg-slate-75 dark:bg-slate-800;
+  @apply relative w-full py-0 rounded-b-[0.34rem] px-1 bg-slate-75 dark:bg-slate-800;
 
   ul {
     @apply flex relative left-[2px] rtl:left-[unset] rtl:right-[2px] list-none m-0 overflow-auto py-1 px-0;
@@ -249,6 +275,7 @@ export default {
     li .active {
       @apply bg-white dark:bg-slate-900;
     }
+
     .emoji--item {
       @apply items-center flex text-sm;
 

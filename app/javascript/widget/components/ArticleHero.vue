@@ -1,15 +1,3 @@
-<template>
-  <div>
-    <h2 class="text-base font-bold leading-6 text-slate-800 mb-0">
-      {{ $t('PORTAL.POPULAR_ARTICLES') }}
-    </h2>
-    <category-card
-      :articles="articles.slice(0, 4)"
-      @view-all-articles="$emit('view-all-articles')"
-    />
-  </div>
-</template>
-
 <script>
 import CategoryCard from './ArticleCategoryCard.vue';
 export default {
@@ -19,12 +7,21 @@ export default {
       type: Array,
       default: () => [],
     },
-    categoryPath: {
-      type: String,
-      default: '',
+  },
+  emits: ['view', 'viewAll'],
+  methods: {
+    onArticleClick(link) {
+      this.$emit('view', link);
     },
   },
 };
 </script>
 
-<style></style>
+<template>
+  <CategoryCard
+    :title="$t('PORTAL.POPULAR_ARTICLES')"
+    :articles="articles.slice(0, 6)"
+    @view-all="$emit('viewAll')"
+    @view="onArticleClick"
+  />
+</template>

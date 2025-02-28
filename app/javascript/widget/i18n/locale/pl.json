@@ -22,19 +22,21 @@
     "IN_A_DAY": "Zwykle odpowiadamy w przeciągu jednego dnia",
     "BACK_IN": "Będziemy dostępni ponownie"
   },
-  "DAY_NAMES": [
-    "Niedziela",
-    "Poniedziałek",
-    "Wtorek",
-    "Środa",
-    "Czwartek",
-    "Piątek",
-    "Sobota"
-  ],
+  "DAY_NAMES": {
+    "SUNDAY": "Niedziela",
+    "MONDAY": "Poniedziałek",
+    "TUESDAY": "Wtorek",
+    "WEDNESDAY": "Środa",
+    "THURSDAY": "Czwartek",
+    "FRIDAY": "Piątek",
+    "SATURDAY": "Sobota"
+  },
   "START_CONVERSATION": "Rozpocznij rozmowę",
   "END_CONVERSATION": "Zakończ rozmowę",
   "CONTINUE_CONVERSATION": "Kontynuuj rozmowę",
+  "YOU": "You",
   "START_NEW_CONVERSATION": "Rozpocznij nową rozmowę",
+  "VIEW_UNREAD_MESSAGES": "You have unread messages",
   "UNREAD_VIEW": {
     "VIEW_MESSAGES_BUTTON": "Pokaż nowe wiadomości",
     "CLOSE_MESSAGES_BUTTON": "Zamknij",
@@ -68,7 +70,8 @@
         "REQUIRED_ERROR": "Numer telefonu jest wymagany",
         "DIAL_CODE_VALID_ERROR": "Proszę wybrać kod kraju",
         "VALID_ERROR": "Wprowadź poprawny numer telefonu",
-        "DROPDOWN_EMPTY": "Brak wyników"
+        "DROPDOWN_EMPTY": "Brak wyników",
+        "DROPDOWN_SEARCH": "Search country"
       },
       "MESSAGE": {
         "LABEL": "Wiadomość",
@@ -78,7 +81,8 @@
     },
     "CAMPAIGN_HEADER": "Proszę podać swoje imię i nazwisko oraz adres e-mail przed rozpoczęciem rozmowy",
     "IS_REQUIRED": "jest wymagane",
-    "REQUIRED": "Wymagane"
+    "REQUIRED": "Wymagane",
+    "REGEX_ERROR": "Please provide a valid input"
   },
   "FILE_SIZE_LIMIT": "Plik przekracza limit {MAXIMUM_FILE_UPLOAD_SIZE} dla załącznika",
   "CHAT_FORM": {
@@ -88,7 +92,8 @@
   },
   "EMOJI": {
     "PLACEHOLDER": "Wyszukaj emoji",
-    "NOT_FOUND": "Nie znaleziono emoji pasującego do wyszukiwania"
+    "NOT_FOUND": "Nie znaleziono emoji pasującego do wyszukiwania",
+    "ARIA_LABEL": "Emoji picker"
   },
   "CSAT": {
     "TITLE": "Oceń udzielone Ci wsparcie",
@@ -108,6 +113,30 @@
   },
   "PORTAL": {
     "POPULAR_ARTICLES": "Popular Articles",
-    "VIEW_ALL_ARTICLES": "Zobacz wszystkie artykuły"
+    "VIEW_ALL_ARTICLES": "Zobacz wszystkie artykuły",
+    "IFRAME_LOAD_ERROR": "There was an error loading the article, please refresh the page and try again."
+  },
+  "ATTACHMENTS": {
+    "image": {
+      "CONTENT": "Wiadomość z obrazkiem"
+    },
+    "audio": {
+      "CONTENT": "Wiadomość dźwiękowa"
+    },
+    "video": {
+      "CONTENT": "Wiadomość wideo"
+    },
+    "file": {
+      "CONTENT": "Załącznik pliku"
+    },
+    "location": {
+      "CONTENT": "Lokalizacja"
+    },
+    "fallback": {
+      "CONTENT": "udostępnił adres URL"
+    }
+  },
+  "FOOTER_REPLY_TO": {
+    "REPLY_TO": "Replying to:"
   }
 }

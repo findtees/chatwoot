@@ -48,7 +48,7 @@
         "CUSTOM_EMAIL_DOMAIN_ENABLED": "Vous pouvez maintenant recevoir des courriels dans votre domaine personnalisé."
       }
     },
-    "UPDATE_CHATWOOT": "Une mise à jour %{latestChatwootVersion} de Chatwoot est disponible. Veuillez mettre à jour votre instance.",
+    "UPDATE_CHATWOOT": "Une mise à jour {latestChatwootVersion} de Chatwoot est disponible. Veuillez mettre à jour votre instance.",
     "LEARN_MORE": "En savoir plus",
     "PAYMENT_PENDING": "Votre paiement est en attente. Merci de mettre à jour vos informations de paiement pour continuer à utiliser Chatwoot",
     "LIMITS_UPGRADE": "Votre compte a dépassé les limites d'utilisation, veuillez mettre à niveau votre plan pour continuer à utiliser Chatwoot",
@@ -87,12 +87,17 @@
       "conversation_assignment": "Conversation assignée",
       "assigned_conversation_new_message": "Nouveau message",
       "participating_conversation_new_message": "Nouveau message",
-      "conversation_mention": "Mention"
+      "conversation_mention": "Mention",
+      "sla_missed_first_response": "SLA Missed",
+      "sla_missed_next_response": "SLA Missed",
+      "sla_missed_resolution": "SLA Missed"
     }
   },
   "NETWORK": {
     "NOTIFICATION": {
-      "TEXT": "Déconnecté de Chatwoot"
+      "OFFLINE": "Hors ligne",
+      "RECONNECTING": "Reconnecting...",
+      "RECONNECT_SUCCESS": "Reconnected"
     },
     "BUTTON": {
       "REFRESH": "Actualiser"
@@ -104,6 +109,7 @@
       "GENERAL": "Général",
       "REPORTS": "Rapports",
       "CONVERSATION": "Conversation",
+      "BULK_ACTIONS": "Bulk Actions",
       "CHANGE_ASSIGNEE": "Changer de responsable",
       "CHANGE_PRIORITY": "Modifier la priorité",
       "CHANGE_TEAM": "Changer d’équipe",
@@ -111,8 +117,9 @@
       "ADD_LABEL": "Ajouter une étiquette à la conversation",
       "REMOVE_LABEL": "Supprimer l'étiquette de la conversation",
       "SETTINGS": "Paramètres",
-      "AI_ASSIST": "AI Assist",
-      "APPEARANCE": "Appearance"
+      "AI_ASSIST": "Assistance IA",
+      "APPEARANCE": "Apparence",
+      "SNOOZE_NOTIFICATION": "Mettre la notification en veille"
     },
     "COMMANDS": {
       "GO_TO_CONVERSATION_DASHBOARD": "Aller au tableau de bord des conversations",
@@ -134,7 +141,7 @@
       "GO_TO_NOTIFICATIONS": "Accéder aux notifications",
       "ADD_LABELS_TO_CONVERSATION": "Ajouter une étiquette à la conversation",
       "ASSIGN_AN_AGENT": "Affecter un agent",
-      "AI_ASSIST": "AI Assist",
+      "AI_ASSIST": "Assistance IA",
       "ASSIGN_PRIORITY": "Attribuer priorité",
       "ASSIGN_A_TEAM": "Assigner une équipe",
       "MUTE_CONVERSATION": "Désactiver la conversation",
@@ -149,18 +156,19 @@
       "UNTIL_TOMORROW": "Jusqu'à demain",
       "UNTIL_NEXT_MONTH": "Jusqu'au mois prochain",
       "AN_HOUR_FROM_NOW": "D'ici une heure",
-      "CUSTOM": "Personnalisé...",
-      "CHANGE_APPEARANCE": "Change Appearance",
-      "LIGHT_MODE": "Light",
-      "DARK_MODE": "Dark",
-      "SYSTEM_MODE": "Système"
+      "UNTIL_CUSTOM_TIME": "Personnalisé...",
+      "CHANGE_APPEARANCE": "Changer l'apparence",
+      "LIGHT_MODE": "Clair",
+      "DARK_MODE": "Sombre",
+      "SYSTEM_MODE": "Système",
+      "SNOOZE_NOTIFICATION": "Mettre la notification en veille"
     }
   },
   "DASHBOARD_APPS": {
     "LOADING_MESSAGE": "Chargement de l'application du tableau de bord ..."
   },
   "COMMON": {
-    "OR": "Or",
+    "OR": "Ou",
     "CLICK_HERE": "cliquez ici"
   }
 }
